@@ -33,9 +33,10 @@
 │   │       ├── Home.jsx
 │   │       └── PastePage.jsx
 │   └── vite.config.js
-└── README.md
+├── README.md
+└── testbackend.sh
 
-8 directories, 27 files
+8 directories, 28 files
 
 
 
@@ -7366,16 +7367,13 @@ body {
   flex-shrink: 0;
 }
 
-.gallery-scroll {
-  flex: 1;
-  overflow-y: auto;
+.gallery-flex {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-right: 6px;
-  min-height: 0;
-  width: 100%;          /* NEW: take full column width */
+  height: 100%;
+  gap: 8px;
 }
+
 
 .accordion-section {
   border: 1px solid rgba(255,255,255,0.08);
@@ -7383,9 +7381,28 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
   min-height: 0;
 }
+
+.accordion-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.accordion-body {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
 
 /* Closed = header only */
 .accordion-section.closed .accordion-body {
@@ -7398,29 +7415,13 @@ body {
 }
 
 
-.accordion-header {
-  background: rgba(255,255,255,0.05);
-  padding: 10px 14px;
-  font-size: 14px;
-  display: flex;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
+
 
 
 .accordion-header:hover {
   background: rgba(255,255,255,0.08);
 }
 
-.accordion-body {
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-}
 
 
 /* Card glass style */
@@ -7660,44 +7661,47 @@ export default function PasteGallery() {
     const interval = setInterval(loadGallery, 4000);
     return () => clearInterval(interval);
   }, []);
+    function Section({ title, type, items }) {
+      const isOpen = open === type;
 
-  function Section({ title, type, items }) {
-    const isOpen = open === type;
+      return (
+        <motion.div
+          className="accordion-section"
+          layout
+          transition={{ duration: 2, ease: "easeInOut" }}
+          style={{
+            flex: isOpen ? "4 1 0%" : "1 1 0%"
+          }}
+        >
+          <button className="accordion-header" onClick={() => setOpen(type)}>
+            <span>{title}</span>
+            <span>{isOpen ? "−" : "+"}</span>
+          </button>
 
-    return (
-      <div
-        className={`accordion-section ${isOpen ? "open" : "closed"}`}
-        onClick={() => setOpen(type)}
-      >
-        <div className="accordion-header">
-          <span>{title}</span>
-          <span>{isOpen ? "−" : "+"}</span>
-        </div>
-
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div
-              className="accordion-body"
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              {items.length === 0 && (
-                <p className="empty">No active pastes</p>
-              )}
-              {items.map((paste) => (
-                <PasteCard key={paste.id} paste={paste} />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
-  }
+          <AnimatePresence initial={false}>
+            {isOpen && (
+              <motion.div
+                className="accordion-body"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {items.length === 0 && (
+                  <p className="empty">No active pastes</p>
+                )}
+                {items.map((paste) => (
+                  <PasteCard key={paste.id} paste={paste} />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      );
+    }
 
   return (
-    <div className="gallery-grid">
+    <div className="gallery-flex">
       <Section title="Immortals" type="immortals" items={groups.immortals} />
       <Section title="Watchlist" type="watchlist" items={groups.watchlist} />
       <Section title="Timebombs" type="timebombs" items={groups.timebombs} />

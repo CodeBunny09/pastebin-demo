@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PasteCard from "./PasteCard.jsx";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+
 function classify(meta) {
   const infiniteViews = meta.max_views === null;
   const infiniteTime = meta.expires_at === null;
@@ -38,7 +41,7 @@ export default function PasteGallery() {
 
   useEffect(() => {
     async function loadGallery() {
-      const res = await fetch("/api/pastes");
+      const res = await fetch(`${API_BASE}/api/pastes`);
       if (!res.ok) return;
       let data = await res.json();
       data = [...data].reverse();
@@ -52,7 +55,7 @@ export default function PasteGallery() {
 
       await Promise.all(
         data.map(async (paste) => {
-          const r = await fetch(`/api/pastes/${paste.id}/meta`);
+          const r = await fetch(`${API_BASE}/api/pastes/${paste.id}/meta`);
           if (!r.ok) return;
           const meta = await r.json();
           const type = classify(meta);

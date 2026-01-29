@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PasteGallery from "./PasteGallery.jsx";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
 export default function PasteCreator() {
   const [content, setContent] = useState("");
   const [ttl, setTtl] = useState("");
@@ -14,7 +16,7 @@ export default function PasteCreator() {
     if (ttl) body.ttl_seconds = Number(ttl);
     if (views) body.max_views = Number(views);
 
-    const res = await fetch("/api/pastes", {
+    const res = await fetch(`${API_BASE}/api/pastes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)

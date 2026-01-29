@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+
 export default function PasteCard({ paste }) {
   const [meta, setMeta] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
@@ -10,7 +13,7 @@ export default function PasteCard({ paste }) {
     let metaInterval;
 
     async function loadMeta() {
-      const res = await fetch(`/api/pastes/${paste.id}/meta`);
+      const res = await fetch(`${API_BASE}/api/pastes/${paste.id}/meta`);
       if (!res.ok) return;
 
       const data = await res.json();

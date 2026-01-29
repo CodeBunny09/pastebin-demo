@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+
 export default function PasteViewer({ id }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -11,7 +14,7 @@ export default function PasteViewer({ id }) {
     loaded.current = true;
 
     async function load() {
-      const res = await fetch(`/api/pastes/${id}`);
+      const res = await fetch(`${API_BASE}/api/pastes/${id}`);
       if (!res.ok) {
         setError("Paste not found or expired");
         return;
