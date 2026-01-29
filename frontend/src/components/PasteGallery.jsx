@@ -114,10 +114,10 @@ export default function PasteGallery() {
 
   return (
     <div className="gallery-flex">
-      <Section title="Immortals" type="immortals" items={groups.immortals} />
-      <Section title="Watchlist" type="watchlist" items={groups.watchlist} />
-      <Section title="Timebombs" type="timebombs" items={groups.timebombs} />
       <Section title="Doomed" type="doomed" items={groups.doomed} />
+      <Section title="Timebombs" type="timebombs" items={groups.timebombs} />
+      <Section title="Watchlist" type="watchlist" items={groups.watchlist} />
+      <Section title="Immortals" type="immortals" items={groups.immortals} />
     </div>
   );
 }
